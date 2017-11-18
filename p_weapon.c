@@ -4,8 +4,9 @@
 #include "m_player.h"
 
 
-static qboolean	is_quad;
-static byte		is_silenced;
+// JDK: Done to make is_quad and is_silenced available in mod/weapon.c
+extern qboolean	is_quad;		qboolean	is_quad;
+extern byte		is_silenced;	byte		is_silenced;
 
 
 void weapon_grenade_fire (edict_t *ent, qboolean held);

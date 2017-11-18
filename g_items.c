@@ -5,6 +5,24 @@ qboolean	Pickup_Weapon (edict_t *ent, edict_t *other);
 void		Use_Weapon (edict_t *ent, gitem_t *inv);
 void		Drop_Weapon (edict_t *ent, gitem_t *inv);
 
+void Weapon_Grenade (edict_t *ent);
+
+// JDK Superhot Weapons
+void Superhot_Weapon_Fire (edict_t *ent);
+void Superhot_Weapon_Blaster (edict_t *ent);
+void Superhot_Weapon_Shotgun (edict_t *ent);
+void Superhot_Weapon_SuperShotgun (edict_t *ent);
+void Superhot_Weapon_Machinegun (edict_t *ent);
+void Superhot_Weapon_Chaingun (edict_t *ent);
+void Superhot_Weapon_HyperBlaster (edict_t *ent);
+void Superhot_Weapon_RocketLauncher (edict_t *ent);
+void Superhot_Weapon_GrenadeLauncher (edict_t *ent);
+void Superhot_Weapon_Railgun (edict_t *ent);
+void Superhot_Weapon_BFG (edict_t *ent);
+
+
+/*
+TODO: JDK Implement a Superhot_Weapon_Grenade
 void Weapon_Blaster (edict_t *ent);
 void Weapon_Shotgun (edict_t *ent);
 void Weapon_SuperShotgun (edict_t *ent);
@@ -16,6 +34,7 @@ void Weapon_Grenade (edict_t *ent);
 void Weapon_GrenadeLauncher (edict_t *ent);
 void Weapon_Railgun (edict_t *ent);
 void Weapon_BFG (edict_t *ent);
+*/
 
 gitem_armor_t jacketarmor_info	= { 25,  50, .30, .00, ARMOR_JACKET};
 gitem_armor_t combatarmor_info	= { 50, 100, .60, .30, ARMOR_COMBAT};
@@ -1275,7 +1294,7 @@ always owned, never in the world
 		NULL,
 		Use_Weapon,
 		NULL,
-		Weapon_Blaster,
+		Superhot_Weapon_Blaster,
 		"misc/w_pkup.wav",
 		NULL, 0,
 		"models/weapons/v_blast/tris.md2",
@@ -1298,7 +1317,7 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_Shotgun,
+		Superhot_Weapon_Shotgun,
 		"misc/w_pkup.wav",
 		"models/weapons/g_shotg/tris.md2", EF_ROTATE,
 		"models/weapons/v_shotg/tris.md2",
@@ -1321,7 +1340,7 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_SuperShotgun,
+		Superhot_Weapon_SuperShotgun,
 		"misc/w_pkup.wav",
 		"models/weapons/g_shotg2/tris.md2", EF_ROTATE,
 		"models/weapons/v_shotg2/tris.md2",
@@ -1344,7 +1363,7 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_Machinegun,
+		Superhot_Weapon_Machinegun,
 		"misc/w_pkup.wav",
 		"models/weapons/g_machn/tris.md2", EF_ROTATE,
 		"models/weapons/v_machn/tris.md2",
@@ -1367,7 +1386,7 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_Chaingun,
+		Superhot_Weapon_Chaingun,
 		"misc/w_pkup.wav",
 		"models/weapons/g_chain/tris.md2", EF_ROTATE,
 		"models/weapons/v_chain/tris.md2",
@@ -1413,7 +1432,7 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_GrenadeLauncher,
+		Superhot_Weapon_GrenadeLauncher,
 		"misc/w_pkup.wav",
 		"models/weapons/g_launch/tris.md2", EF_ROTATE,
 		"models/weapons/v_launch/tris.md2",
@@ -1436,7 +1455,7 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_RocketLauncher,
+		Superhot_Weapon_RocketLauncher,
 		"misc/w_pkup.wav",
 		"models/weapons/g_rocket/tris.md2", EF_ROTATE,
 		"models/weapons/v_rocket/tris.md2",
@@ -1459,7 +1478,7 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_HyperBlaster,
+		Superhot_Weapon_HyperBlaster,
 		"misc/w_pkup.wav",
 		"models/weapons/g_hyperb/tris.md2", EF_ROTATE,
 		"models/weapons/v_hyperb/tris.md2",
@@ -1482,7 +1501,7 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_Railgun,
+		Superhot_Weapon_Railgun,
 		"misc/w_pkup.wav",
 		"models/weapons/g_rail/tris.md2", EF_ROTATE,
 		"models/weapons/v_rail/tris.md2",
@@ -1505,7 +1524,7 @@ always owned, never in the world
 		Pickup_Weapon,
 		Use_Weapon,
 		Drop_Weapon,
-		Weapon_BFG,
+		Superhot_Weapon_BFG,
 		"misc/w_pkup.wav",
 		"models/weapons/g_bfg/tris.md2", EF_ROTATE,
 		"models/weapons/v_bfg/tris.md2",

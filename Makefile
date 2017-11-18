@@ -80,7 +80,8 @@ GAME_OBJS = \
 	$(BUILDDIR)/p_trail.o \
 	$(BUILDDIR)/p_view.o \
 	$(BUILDDIR)/p_weapon.o \
-	$(BUILDDIR)/m_flash.o
+	$(BUILDDIR)/m_flash.o \
+	$(BUILDDIR)/weapon.o # JDK
 
 $(BUILDDIR)/game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
 	$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(GAME_OBJS)
@@ -227,6 +228,9 @@ $(BUILDDIR)/q_shared.o :    q_shared.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/m_flash.o :     m_flash.c
+	$(DO_SHLIB_CC)
+
+$(BUILDDIR)/weapon.o :     mod/weapon.c
 	$(DO_SHLIB_CC)
 
 #####
