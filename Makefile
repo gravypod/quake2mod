@@ -81,7 +81,9 @@ GAME_OBJS = \
 	$(BUILDDIR)/p_view.o \
 	$(BUILDDIR)/p_weapon.o \
 	$(BUILDDIR)/m_flash.o \
-	$(BUILDDIR)/weapon.o # JDK
+	\
+	$(BUILDDIR)/weapon.o \
+    $(BUILDDIR)/sh_bullet.o # JDK
 
 $(BUILDDIR)/game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
 	$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(GAME_OBJS)
@@ -231,6 +233,9 @@ $(BUILDDIR)/m_flash.o :     m_flash.c
 	$(DO_SHLIB_CC)
 
 $(BUILDDIR)/weapon.o :     mod/weapon.c
+	$(DO_SHLIB_CC)
+
+$(BUILDDIR)/sh_bullet.o :     mod/sh_bullet.c
 	$(DO_SHLIB_CC)
 
 #####
