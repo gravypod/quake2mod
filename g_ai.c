@@ -1,6 +1,7 @@
 // g_ai.c
 
-#include "g_local.h"
+//#include "g_local.h"
+#include "mod/mod.h"
 
 qboolean FindTarget (edict_t *self);
 extern cvar_t	*maxclients;
@@ -751,6 +752,12 @@ used by ai_run and ai_stand
 */
 qboolean ai_checkattack (edict_t *self, float dist)
 {
+
+	if (!superhot.is_player_moving) {
+		return false;
+	}
+	self->monsterinfo.attack_state = AS_MISSILE;
+
 	vec3_t		temp;
 	qboolean	hesDeadJim;
 
@@ -894,6 +901,12 @@ The monster has an enemy it is trying to kill
 */
 void ai_run (edict_t *self, float dist)
 {
+
+	if (!superhot.is_player_moving) {
+		self->monsterinfo.idle_time = level.time + 0.001f;
+		return;
+	}
+
 	vec3_t		v;
 	edict_t		*tempgoal;
 	edict_t		*save;

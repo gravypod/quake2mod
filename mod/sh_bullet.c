@@ -1,53 +1,48 @@
 #include "sh_bullet.h"
+#include "mod.h"
 
+#define SUPERHOT_BULLET_THINK_INTERVAL ((float)0.01)
+#define SUPERHOT_BULLET_SPEED 500 // 650
+#define SUPERHOT_BULLET_DAMAGE 999999
 
-
-void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf);
-
-/*
-=================
-check_dodge
-
-This is a support routine used when a client is firing
-a non-instant attack weapon.  It checks to see if a
-monster's dodge function should be called.
-=================
-*/
-static void check_dodge (edict_t *self, vec3_t start, vec3_t dir, int speed)
-{
-    vec3_t	end;
-    vec3_t	v;
-    trace_t	tr;
-    float	eta;
+/**
+ * Trigger's an entity's dodge logic if it exists
+ *
+ * @param self - The entity
+ * @param start - Where the projectile is coming from
+ * @param dir - direction the bullet is going
+ * @param speed - speed of projectile
+ */
+void check_dodge(edict_t *self, vec3_t start, vec3_t dir, int speed) {
+    vec3_t end;
+    vec3_t v;
+    trace_t tr;
+    float eta;
 
     // easy mode only ducks one quarter the time
-    if (skill->value == 0)
-    {
+    if (skill->value == 0) {
         if (random() > 0.25)
             return;
     }
-    VectorMA (start, 8192, dir, end);
-    tr = gi.trace (start, NULL, NULL, end, self, MASK_SHOT);
-    if ((tr.ent) && (tr.ent->svflags & SVF_MONSTER) && (tr.ent->health > 0) && (tr.ent->monsterinfo.dodge) && infront(tr.ent, self))
-    {
+    VectorMA(start, 8192, dir, end);
+    tr = gi.trace(start, NULL, NULL, end, self, MASK_SHOT);
+    if ((tr.ent) && (tr.ent->svflags & SVF_MONSTER) && (tr.ent->health > 0) && (tr.ent->monsterinfo.dodge) &&
+        infront(tr.ent, self)) {
         VectorSubtract (tr.endpos, start, v);
         eta = (VectorLength(v) - tr.ent->maxs[0]) / speed;
-        tr.ent->monsterinfo.dodge (tr.ent, self, eta);
+        tr.ent->monsterinfo.dodge(tr.ent, self, eta);
     }
 }
 
-
-void superhot_bullet_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
-{
-    vec3_t		origin;
-    int			n;
+void superhot_bullet_touch(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf) {
+    vec3_t origin;
+    int n;
 
     if (other == ent->owner)
         return;
 
-    if (surf && (surf->flags & SURF_SKY))
-    {
-        G_FreeEdict (ent);
+    if (surf && (surf->flags & SURF_SKY)) {
+        G_FreeEdict(ent);
         return;
     }
 
@@ -55,82 +50,73 @@ void superhot_bullet_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurf
         PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
 
     // calculate position for the explosion entity
-    VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
+    VectorMA(ent->s.origin, -0.02, ent->velocity, origin);
 
-    if (other->takedamage)
-    {
-        T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin, plane->normal, ent->dmg, 0, 0, MOD_ROCKET);
+    if (other->takedamage) {
+        T_Damage(other, ent, ent->owner, ent->velocity, ent->s.origin, plane->normal, ent->dmg, 0, 0, MOD_ROCKET);
     }
-    /*
-    else
-    {
-        JDK: No sprite for explode for bullets
-        // don't throw any debris in net games
-        if (!deathmatch->value && !coop->value)
-        {
-            if ((surf) && !(surf->flags & (SURF_WARP|SURF_TRANS33|SURF_TRANS66|SURF_FLOWING)))
-            {
-                n = rand() % 5;
-                while(n--)
-                    ThrowDebris (ent, "models/objects/debris2/tris.md2", 2, ent->s.origin);
-            }
-        }
-     }
-     */
 
+    // TODO: make a bullet flash sprite at the destination
 
-    // JdK Bullets don't ahve a radius damage
-    // JDK T_RadiusDamage(ent, ent->owner, ent->radius_dmg, other, ent->dmg_radius, MOD_R_SPLASH);
-
-    // JDK Remove explosions from bullets
-    //gi.WriteByte (svc_temp_entity);
-    //if (ent->waterlevel)
-    //    gi.WriteByte (TE_ROCKET_EXPLOSION_WATER);
-    //else
-    //    gi.WriteByte (TE_ROCKET_EXPLOSION);
-    //gi.WritePosition (origin);
-    //gi.multicast (ent->s.origin, MULTICAST_PHS);
-
-    // JDK send a blaster muzzle flash
-    gi.WriteByte (svc_muzzleflash);
-    gi.WriteShort (ent-g_edicts);
-    gi.WriteByte (MZ_BLASTER);
-    gi.multicast (ent->s.origin, MULTICAST_PVS);
-
-    G_FreeEdict (ent);
+    G_FreeEdict(ent);
 }
 
+void superhot_bullet_think(edict_t *self) {
 
-void fire_superhot_bullet (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, float damage_radius, int radius_damage)
-{
-    edict_t	*rocket;
+    if (superhot.is_player_moving) {
+        VectorScale(self->movedir, SUPERHOT_BULLET_SPEED, self->velocity);
+    } else {
+        VectorSet(self->velocity, 0, 0, 0);
+    }
 
-    rocket = G_Spawn();
+    // Cleanup the think
+    if (self->nextthink < self->dmg_radius)
+        self->think = superhot_bullet_think;
+    else
+        self->think = G_FreeEdict;
+
+    self->nextthink = level.time + SUPERHOT_BULLET_THINK_INTERVAL;
+}
+
+void fire_superhot_bullet(edict_t *self, vec3_t start, vec3_t dir) {
+    edict_t *rocket = G_Spawn();
+
     VectorCopy (start, rocket->s.origin);
     VectorCopy (dir, rocket->movedir);
-    vectoangles (dir, rocket->s.angles);
-    VectorScale (dir, speed, rocket->velocity);
+    vectoangles(dir, rocket->s.angles);
+    VectorScale(dir, SUPERHOT_BULLET_SPEED, rocket->velocity);
+    VectorClear (rocket->mins);
+    VectorClear (rocket->maxs);
+
+    rocket->owner = self;
+    rocket->touch = superhot_bullet_touch;
+
+    // Setup think method
+    rocket->nextthink = level.time + SUPERHOT_BULLET_THINK_INTERVAL;
+    rocket->think = superhot_bullet_think;
+
+    // Set super hot rocket damage
+    rocket->dmg = SUPERHOT_BULLET_DAMAGE;
+
+    // Disable radius damage
+    rocket->radius_dmg = 0;
+
+    // Radius damage isn't used so I'm using this variable as the "max think time"
+    // JDK: This variable was co-opted as a special counter.
+    rocket->dmg_radius = level.time + (8000 / SUPERHOT_BULLET_SPEED);
+
+    // Setup missle-specfic styling
     rocket->movetype = MOVETYPE_FLYMISSILE;
     rocket->clipmask = MASK_SHOT;
     rocket->solid = SOLID_BBOX;
-    rocket->s.effects |= EF_BLASTER; //EF_ROCKET;
-    VectorClear (rocket->mins);
-    VectorClear (rocket->maxs);
-    rocket->s.modelindex = gi.modelindex ("models/objects/rocket/tris.md2");
-    rocket->owner = self;
-    rocket->touch = superhot_bullet_touch;
-    rocket->nextthink = level.time + 8000/speed;
-    rocket->think = G_FreeEdict;
-    rocket->dmg = 999999;
-    rocket->radius_dmg = radius_damage;
-    rocket->dmg_radius = 1; //damage_radius;
-    rocket->s.sound = gi.soundindex ("misc/lasfly.wav");
-    // JDK: Bullets go PEW!
-    // gi.soundindex ("weapons/rockfly.wav");
+    rocket->s.effects |= EF_BLASTER;
+    rocket->s.sound = gi.soundindex("misc/lasfly.wav");
+    rocket->s.modelindex = gi.modelindex("models/objects/rocket/tris.md2");
     rocket->classname = "rocket";
 
-    if (self->client)
-        check_dodge (self, rocket->s.origin, dir, speed);
+    if (self->client) {
+        check_dodge(self, rocket->s.origin, dir, SUPERHOT_BULLET_SPEED);
+    }
 
-    gi.linkentity (rocket);
+    gi.linkentity(rocket);
 }

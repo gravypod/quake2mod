@@ -1,5 +1,7 @@
-#include "g_local.h"
-#include "m_player.h"
+//#include "g_local.h"
+//#include "m_player.h"
+// JDK Replaced by Mod
+#include "mod/mod.h"
 
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 
@@ -1560,6 +1562,10 @@ usually be a couple times for each server frame.
 */
 void ClientThink (edict_t *ent, usercmd_t *ucmd)
 {
+	// JDK
+	if (!superhot.on_update(ent, ucmd))
+		return;
+
 	gclient_t	*client;
 	edict_t	*other;
 	int		i, j;

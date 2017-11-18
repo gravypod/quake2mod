@@ -1,5 +1,7 @@
-#include "g_local.h"
+#include "mod/mod.h"
+#include "mod/sh_bullet.h"
 
+// JDK Replaced monster weapons with supherhot bullets
 
 //
 // monster weapons
@@ -11,72 +13,87 @@
 // the damages too, but I'm not sure that's such a good idea.
 void monster_fire_bullet (edict_t *self, vec3_t start, vec3_t dir, int damage, int kick, int hspread, int vspread, int flashtype)
 {
-	fire_bullet (self, start, dir, damage, kick, hspread, vspread, MOD_UNKNOWN);
+
+	if (superhot.is_player_moving)
+		fire_superhot_bullet(self, start, dir);
+
+/*	fire_bullet (self, start, dir, damage, kick, hspread, vspread, MOD_UNKNOWN);
 
 	gi.WriteByte (svc_muzzleflash2);
 	gi.WriteShort (self - g_edicts);
 	gi.WriteByte (flashtype);
-	gi.multicast (start, MULTICAST_PVS);
+	gi.multicast (start, MULTICAST_PVS);*/
 }
 
 void monster_fire_shotgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick, int hspread, int vspread, int count, int flashtype)
 {
-	fire_shotgun (self, start, aimdir, damage, kick, hspread, vspread, count, MOD_UNKNOWN);
+	if (superhot.is_player_moving)
+		fire_superhot_bullet(self, start, aimdir);
+	/*fire_shotgun (self, start, aimdir, damage, kick, hspread, vspread, count, MOD_UNKNOWN);
 
 	gi.WriteByte (svc_muzzleflash2);
 	gi.WriteShort (self - g_edicts);
 	gi.WriteByte (flashtype);
-	gi.multicast (start, MULTICAST_PVS);
+	gi.multicast (start, MULTICAST_PVS);*/
 }
 
 void monster_fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int flashtype, int effect)
 {
-	fire_blaster (self, start, dir, damage, speed, effect, false);
+	if (superhot.is_player_moving)
+		fire_superhot_bullet(self, start, dir);
+	/*fire_blaster (self, start, dir, damage, speed, effect, false);
 
 	gi.WriteByte (svc_muzzleflash2);
 	gi.WriteShort (self - g_edicts);
 	gi.WriteByte (flashtype);
-	gi.multicast (start, MULTICAST_PVS);
+	gi.multicast (start, MULTICAST_PVS);*/
 }	
 
 void monster_fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, int flashtype)
 {
-	fire_grenade (self, start, aimdir, damage, speed, 2.5, damage+40);
+	//fire_superhot_bullet(self, start, dir);
+	/*fire_grenade (self, start, aimdir, damage, speed, 2.5, damage+40);
 
 	gi.WriteByte (svc_muzzleflash2);
 	gi.WriteShort (self - g_edicts);
 	gi.WriteByte (flashtype);
-	gi.multicast (start, MULTICAST_PVS);
+	gi.multicast (start, MULTICAST_PVS);*/
 }
 
 void monster_fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed, int flashtype)
 {
-	fire_rocket (self, start, dir, damage, speed, damage+20, damage);
+	if (superhot.is_player_moving)
+		fire_superhot_bullet(self, start, dir);
+	/*fire_rocket (self, start, dir, damage, speed, damage+20, damage);
 
 	gi.WriteByte (svc_muzzleflash2);
 	gi.WriteShort (self - g_edicts);
 	gi.WriteByte (flashtype);
-	gi.multicast (start, MULTICAST_PVS);
+	gi.multicast (start, MULTICAST_PVS);*/
 }	
 
 void monster_fire_railgun (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick, int flashtype)
 {
+	if (superhot.is_player_moving)
+		fire_superhot_bullet(self, start, aimdir);/*
 	fire_rail (self, start, aimdir, damage, kick);
 
 	gi.WriteByte (svc_muzzleflash2);
 	gi.WriteShort (self - g_edicts);
 	gi.WriteByte (flashtype);
-	gi.multicast (start, MULTICAST_PVS);
+	gi.multicast (start, MULTICAST_PVS);*/
 }
 
 void monster_fire_bfg (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int speed, int kick, float damage_radius, int flashtype)
 {
-	fire_bfg (self, start, aimdir, damage, speed, damage_radius);
+	if (superhot.is_player_moving)
+		fire_superhot_bullet(self, start, aimdir);
+/*	fire_bfg (self, start, aimdir, damage, speed, damage_radius);
 
 	gi.WriteByte (svc_muzzleflash2);
 	gi.WriteShort (self - g_edicts);
 	gi.WriteByte (flashtype);
-	gi.multicast (start, MULTICAST_PVS);
+	gi.multicast (start, MULTICAST_PVS);*/
 }
 
 

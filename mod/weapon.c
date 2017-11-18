@@ -5,9 +5,6 @@
 extern qboolean is_quad;
 extern qboolean is_silenced;
 
-
-
-
 static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
 {
     vec3_t	_distance;
@@ -19,9 +16,6 @@ static void P_ProjectSource (gclient_t *client, vec3_t point, vec3_t distance, v
         _distance[1] = 0;
     G_ProjectSource (point, _distance, forward, right, result);
 }
-
-
-
 
 void Superhot_Weapon_Fire (edict_t *ent)
 {
@@ -48,7 +42,7 @@ void Superhot_Weapon_Fire (edict_t *ent)
     VectorSet(offset, 8, 8, ent->viewheight-8);
     P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
     // Original Line: fire_rocket (ent, start, forward, damage, 650, damage_radius, radius_damage);
-    fire_superhot_bullet(ent, start, forward, damage, 650, damage_radius, radius_damage);
+    fire_superhot_bullet(ent, start, forward);
 
     // send muzzle flash
     gi.WriteByte (svc_muzzleflash);
