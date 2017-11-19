@@ -1,4 +1,4 @@
-#include "g_local.h"
+#include "mod/mod.h"
 
 
 qboolean	Pickup_Weapon (edict_t *ent, edict_t *other);
@@ -556,6 +556,12 @@ void MegaHealth_think (edict_t *self)
 
 qboolean Pickup_Health (edict_t *ent, edict_t *other)
 {
+
+	// JDK: Make health add FROZEN_TIME_BOOST
+	superhot.on_pickup(FROZEN_TIME_BOOST, ent);
+	return true;
+
+
 	if (!(ent->style & HEALTH_IGNORE_MAX))
 		if (other->health >= other->max_health)
 			return false;
