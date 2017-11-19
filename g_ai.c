@@ -73,6 +73,9 @@ This replaces the QC functions: ai_forward, ai_back, ai_pain, and ai_painforward
 */
 void ai_move (edict_t *self, float dist)
 {
+	if (!superhot.should_allow_update_on(self)) {
+		return;
+	}
 	M_walkmove (self, self->s.angles[YAW], dist);
 }
 
@@ -87,6 +90,9 @@ Distance is for slight position adjustments needed by the animations
 */
 void ai_stand (edict_t *self, float dist)
 {
+	if (!superhot.should_allow_update_on(self)) {
+		return;
+	}
 	vec3_t	v;
 
 	if (dist)
@@ -144,6 +150,10 @@ The monster is walking it's beat
 */
 void ai_walk (edict_t *self, float dist)
 {
+	if (!superhot.should_allow_update_on(self)) {
+		return;
+	}
+
 	M_MoveToGoal (self, dist);
 
 	// check for noticing a player
@@ -175,6 +185,11 @@ Use this call with a distnace of 0 to replace ai_face
 */
 void ai_charge (edict_t *self, float dist)
 {
+
+	if (!superhot.should_allow_update_on(self)) {
+		return;
+	}
+
 	vec3_t	v;
 
 	VectorSubtract (self->enemy->s.origin, self->s.origin, v);
@@ -196,6 +211,10 @@ Distance is for slight position adjustments needed by the animations
 */
 void ai_turn (edict_t *self, float dist)
 {
+	if (!superhot.should_allow_update_on(self)) {
+		return;
+	}
+
 	if (dist)
 		M_walkmove (self, self->s.angles[YAW], dist);
 
@@ -724,6 +743,10 @@ Strafe sideways, but stay at aproximately the same range
 */
 void ai_run_slide(edict_t *self, float distance)
 {
+	if (!superhot.should_allow_update_on(self)) {
+		return;
+	}
+
 	float	ofs;
 	
 	self->ideal_yaw = enemy_yaw;
@@ -753,7 +776,7 @@ used by ai_run and ai_stand
 qboolean ai_checkattack (edict_t *self, float dist)
 {
 
-	if (!superhot.is_player_moving) {
+	if (!superhot.should_allow_update_on(self)) {
 		return false;
 	}
 	self->monsterinfo.attack_state = AS_MISSILE;
@@ -901,8 +924,7 @@ The monster has an enemy it is trying to kill
 */
 void ai_run (edict_t *self, float dist)
 {
-
-	if (!superhot.is_player_moving) {
+	if (!superhot.should_allow_update_on(self)) {
 		self->monsterinfo.idle_time = level.time + 0.001f;
 		return;
 	}

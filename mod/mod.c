@@ -16,8 +16,16 @@ qboolean on_update(edict_t *ent, usercmd_t *ucmd) {
     return true;
 }
 
+qboolean should_allow_update_on(edict_t *ent) {
+    if (ent->client)
+        return true;
+    
+    return superhot.is_player_moving;
+}
+
 mod superhot = {
         .is_player_moving = false,
         .set_player_moving = player_moving,
-        .on_update = on_update
+        .on_update = on_update,
+        .should_allow_update_on = should_allow_update_on
 };
