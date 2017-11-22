@@ -20,6 +20,8 @@ typedef struct {
     void (*on_pickup)(superhot_pickup_t type, edict_t *ent);
 } mod;
 
+extern edict_t *player;
+
 extern mod superhot;
 
 #endif //QUAKE2_MOD_H

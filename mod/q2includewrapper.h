@@ -4,7 +4,6 @@
 #include "../g_local.h"
 #include "../m_player.h"
 
-#include "mod.h"
 
 void Weapon_Generic (edict_t *ent,
                      int FRAME_ACTIVATE_LAST,

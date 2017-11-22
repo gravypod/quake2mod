@@ -1,5 +1,4 @@
 #include "sh_bullet.h"
-#include "mod.h"
 
 #define SUPERHOT_BULLET_THINK_INTERVAL ((float)0.01)
 #define SUPERHOT_BULLET_SPEED 500 // 650
@@ -35,14 +34,17 @@ void check_dodge(edict_t *self, vec3_t start, vec3_t dir, int speed) {
 }
 
 void superhot_bullet_touch(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf) {
-    vec3_t origin;
-    int n;
 
+    vec3_t		origin;
+    int			n;
+
+    printf("Superhot bullet touch being called\t\t\t\t\r\n");
     if (other == ent->owner)
         return;
 
-    if (surf && (surf->flags & SURF_SKY)) {
-        G_FreeEdict(ent);
+    if (surf && (surf->flags & SURF_SKY))
+    {
+        G_FreeEdict (ent);
         return;
     }
 
@@ -50,18 +52,40 @@ void superhot_bullet_touch(edict_t *ent, edict_t *other, cplane_t *plane, csurfa
         PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
 
     // calculate position for the explosion entity
-    VectorMA(ent->s.origin, -0.02, ent->velocity, origin);
+    VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
 
-    if (other->takedamage) {
-        T_Damage(other, ent, ent->owner, ent->velocity, ent->s.origin, plane->normal, ent->dmg, 0, 0, MOD_ROCKET);
+    if (other->takedamage)
+    {
+        T_Damage (other, ent, ent->owner, ent->velocity, ent->s.origin, plane->normal, ent->dmg, 0, 0, MOD_ROCKET);
+    }
+    else
+    {
+        // don't throw any debris in net games
+        if (!deathmatch->value && !coop->value)
+        {
+            if ((surf) && !(surf->flags & (SURF_WARP|SURF_TRANS33|SURF_TRANS66|SURF_FLOWING)))
+            {
+                n = rand() % 5;
+                while(n--)
+                    ThrowDebris (ent, "models/objects/debris2/tris.md2", 2, ent->s.origin);
+            }
+        }
     }
 
-    // TODO: make a bullet flash sprite at the destination
+    T_RadiusDamage(ent, ent->owner, ent->radius_dmg, other, ent->dmg_radius, MOD_R_SPLASH);
 
-    G_FreeEdict(ent);
+    gi.WriteByte (svc_temp_entity);
+    if (ent->waterlevel)
+        gi.WriteByte (TE_ROCKET_EXPLOSION_WATER);
+    else
+        gi.WriteByte (TE_ROCKET_EXPLOSION);
+    gi.WritePosition (origin);
+    gi.multicast (ent->s.origin, MULTICAST_PHS);
+
+    G_FreeEdict (ent);
 }
 
-void superhot_bullet_think(edict_t *self) {
+/*void superhot_bullet_think(edict_t *self) {
 
     if (superhot.is_player_moving) {
         VectorScale(self->movedir, SUPERHOT_BULLET_SPEED, self->velocity);
@@ -76,7 +100,7 @@ void superhot_bullet_think(edict_t *self) {
         self->think = G_FreeEdict;
 
     self->nextthink = level.time + SUPERHOT_BULLET_THINK_INTERVAL;
-}
+}*/
 
 void fire_superhot_bullet(edict_t *self, vec3_t start, vec3_t dir) {
     edict_t *rocket = G_Spawn();
@@ -92,8 +116,8 @@ void fire_superhot_bullet(edict_t *self, vec3_t start, vec3_t dir) {
     rocket->touch = superhot_bullet_touch;
 
     // Setup think method
-    rocket->nextthink = level.time + SUPERHOT_BULLET_THINK_INTERVAL;
-    rocket->think = superhot_bullet_think;
+    rocket->nextthink = level.time + (8000000 / SUPERHOT_BULLET_SPEED); //SUPERHOT_BULLET_THINK_INTERVAL;
+    rocket->think = G_FreeEdict; // superhot_bullet_think;
 
     // Set super hot rocket damage
     rocket->dmg = SUPERHOT_BULLET_DAMAGE;

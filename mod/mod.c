@@ -3,6 +3,9 @@
 int frozen_frames = 0;
 edict_t *player = NULL;
 
+float SUPERHOT_frametime = 0.1f;
+
+
 void player_moving(qboolean moving) {
     superhot.is_player_moving = moving;
 }
@@ -15,14 +18,22 @@ qboolean on_update(edict_t *ent, usercmd_t *ucmd) {
     // Detect if the player is currently moving
     qboolean moving = (qboolean) (ucmd->forwardmove != 0 || ucmd->sidemove != 0 || ucmd->upmove != 0);
 
+    // If they die allow them to see respawn menu
+    if (player->health < 0)
+        moving = true;
+
     // IF the player is moving subtract from frozen frames
     if (moving) {
-        if (frozen_frames % 2 == 1)
-            gi.centerprintf(ent, "SUPERHOT: Frozen frames lowering %d", frozen_frames);
-        superhot.add_frozen_frames(-1);
+        //superhot.add_frozen_frames(-3);
+        frozen_frames = 0;
+    } else {
+        superhot.add_frozen_frames(1);
     }
 
     superhot.set_player_moving(moving);
+
+    SUPERHOT_frametime = 0.1f / (frozen_frames > 0 ? frozen_frames : 1);
+
     return true;
 }
 

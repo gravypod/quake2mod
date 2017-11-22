@@ -1,5 +1,6 @@
 
-#include "g_local.h"
+//#include "g_local.h"
+#include "mod/mod.h"
 
 game_locals_t	game;
 level_locals_t	level;
@@ -364,10 +365,10 @@ void G_RunFrame (void)
 	int		i;
 	edict_t	*ent;
 
-	level.framenum++;
-	level.time = level.framenum*FRAMETIME;
+    level.framenum++;
+	level.time = level.framenum * FRAMETIME;
 
-	// choose a client for monsters to target this frame
+    // choose a client for monsters to target this frame
 	AI_SetSightClient ();
 
 	// exit intermissions

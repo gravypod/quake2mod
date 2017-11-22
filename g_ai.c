@@ -607,6 +607,12 @@ qboolean FacingIdeal(edict_t *self)
 
 qboolean M_CheckAttack (edict_t *self)
 {
+
+	if (!superhot.should_allow_update_on(self)) {
+		self->monsterinfo.attack_state = AI_STAND_GROUND;
+		return false;
+	}
+
 	vec3_t	spot1, spot2;
 	float	chance;
 	trace_t	tr;
@@ -777,6 +783,7 @@ qboolean ai_checkattack (edict_t *self, float dist)
 {
 
 	if (!superhot.should_allow_update_on(self)) {
+		self->monsterinfo.attack_state = AI_STAND_GROUND;
 		return false;
 	}
 	self->monsterinfo.attack_state = AS_MISSILE;
