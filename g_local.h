@@ -50,7 +50,7 @@
 #define FL_POWER_ARMOR			0x00001000	// power armor (if any) is active
 #define FL_RESPAWN				0x80000000	// used for item respawning
 
-extern float SUPERHOT_frametime;
+extern float SUPERHOT_frametime; // JDK
 #define	FRAMETIME		SUPERHOT_frametime
 
 // memory tags to allow dynamic memory to be cleaned up

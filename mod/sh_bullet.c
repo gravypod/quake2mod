@@ -38,7 +38,6 @@ void superhot_bullet_touch(edict_t *ent, edict_t *other, cplane_t *plane, csurfa
     vec3_t		origin;
     int			n;
 
-    printf("Superhot bullet touch being called\t\t\t\t\r\n");
     if (other == ent->owner)
         return;
 
