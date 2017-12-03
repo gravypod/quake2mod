@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(CMAKE_VERBOSE_MAKEFILE ON CACHE STRING "" FORCE)
+# set(CMAKE_VERBOSE_MAKEFILE ON CACHE STRING "" FORCE)
 
 set(CMAKE_C_COMPILER_WORKS 1 CACHE STRING "" FORCE)
 
@@ -10,6 +10,11 @@ SET(CMAKE_C_LINK_EXECUTABLE i686-w64-mingw32-gcc CACHE STRING "" FORCE)
 project(quake2)
 
 SET(QUAKE_2_SRC
+		src/m_rider.h
+		src/m_player.h
+		src/game.h
+		src/g_local.h
+
 		src/g_ai.c
 		src/p_client.c
 		src/g_cmds.c
@@ -58,6 +63,9 @@ SET(QUAKE_2_SRC
 		src/p_weapon.c
 		src/q_shared.c
 		src/m_flash.c
+
+		src/mod/q2includewrapper.h
+
 		src/mod/weapon.c
 		src/mod/sh_bullet.c
 		src/mod/mod.c)
