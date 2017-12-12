@@ -364,8 +364,8 @@ void G_SetStats (edict_t *ent)
 	//
 	// health
 	//
-	ent->client->ps.stats[STAT_HEALTH_ICON] = level.pic_health;
-	ent->client->ps.stats[STAT_HEALTH] = ent->health;
+	//ent->client->ps.stats[STAT_HEALTH_ICON] = level.pic_health;
+	//ent->client->ps.stats[STAT_HEALTH] = ent->health;
 
 	//
 	// ammo
@@ -378,8 +378,8 @@ void G_SetStats (edict_t *ent)
 	else
 	{
 		item = &itemlist[ent->client->ammo_index];
-		ent->client->ps.stats[STAT_AMMO_ICON] = gi.imageindex (item->icon);
-		ent->client->ps.stats[STAT_AMMO] = ent->client->pers.inventory[ent->client->ammo_index];
+		ent->client->ps.stats[STAT_AMMO_ICON] = 0; //gi.imageindex (item->icon);
+		ent->client->ps.stats[STAT_AMMO] = 0; //ent->client->pers.inventory[ent->client->ammo_index];
 	}
 	
 	//
@@ -400,14 +400,14 @@ void G_SetStats (edict_t *ent)
 	index = ArmorIndex (ent);
 	if (power_armor_type && (!index || (level.framenum & 8) ) )
 	{	// flash between power armor and other armor icon
-		ent->client->ps.stats[STAT_ARMOR_ICON] = gi.imageindex ("i_powershield");
-		ent->client->ps.stats[STAT_ARMOR] = cells;
+		ent->client->ps.stats[STAT_ARMOR_ICON] = 0; //gi.imageindex ("i_powershield");
+		ent->client->ps.stats[STAT_ARMOR] = 0; //cells;
 	}
 	else if (index)
 	{
 		item = GetItemByIndex (index);
-		ent->client->ps.stats[STAT_ARMOR_ICON] = gi.imageindex (item->icon);
-		ent->client->ps.stats[STAT_ARMOR] = ent->client->pers.inventory[index];
+		ent->client->ps.stats[STAT_ARMOR_ICON] = 0; //gi.imageindex (item->icon);
+		ent->client->ps.stats[STAT_ARMOR] = 0; //ent->client->pers.inventory[index];
 	}
 	else
 	{
@@ -429,23 +429,23 @@ void G_SetStats (edict_t *ent)
 	//
 	if (ent->client->quad_framenum > level.framenum)
 	{
-		ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_quad");
-		ent->client->ps.stats[STAT_TIMER] = (ent->client->quad_framenum - level.framenum)/10;
+		ent->client->ps.stats[STAT_TIMER_ICON] = 0; //gi.imageindex ("p_quad");
+		ent->client->ps.stats[STAT_TIMER] = 0; //(ent->client->quad_framenum - level.framenum)/10;
 	}
 	else if (ent->client->invincible_framenum > level.framenum)
 	{
-		ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_invulnerability");
-		ent->client->ps.stats[STAT_TIMER] = (ent->client->invincible_framenum - level.framenum)/10;
+		ent->client->ps.stats[STAT_TIMER_ICON] = 0; //gi.imageindex ("p_invulnerability");
+		ent->client->ps.stats[STAT_TIMER] = 0; //(ent->client->invincible_framenum - level.framenum)/10;
 	}
 	else if (ent->client->enviro_framenum > level.framenum)
 	{
-		ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_envirosuit");
-		ent->client->ps.stats[STAT_TIMER] = (ent->client->enviro_framenum - level.framenum)/10;
+		ent->client->ps.stats[STAT_TIMER_ICON] = 0; //gi.imageindex ("p_envirosuit");
+		ent->client->ps.stats[STAT_TIMER] = 0; //(ent->client->enviro_framenum - level.framenum)/10;
 	}
 	else if (ent->client->breather_framenum > level.framenum)
 	{
-		ent->client->ps.stats[STAT_TIMER_ICON] = gi.imageindex ("p_rebreather");
-		ent->client->ps.stats[STAT_TIMER] = (ent->client->breather_framenum - level.framenum)/10;
+		ent->client->ps.stats[STAT_TIMER_ICON] = 0; //gi.imageindex ("p_rebreather");
+		ent->client->ps.stats[STAT_TIMER] = 0; //(ent->client->breather_framenum - level.framenum)/10;
 	}
 	else
 	{
@@ -459,15 +459,16 @@ void G_SetStats (edict_t *ent)
 	if (ent->client->pers.selected_item == -1)
 		ent->client->ps.stats[STAT_SELECTED_ICON] = 0;
 	else
-		ent->client->ps.stats[STAT_SELECTED_ICON] = gi.imageindex (itemlist[ent->client->pers.selected_item].icon);
+		ent->client->ps.stats[STAT_SELECTED_ICON] = 0; //gi.imageindex (itemlist[ent->client->pers.selected_item].icon);
 
-	ent->client->ps.stats[STAT_SELECTED_ITEM] = ent->client->pers.selected_item;
+	ent->client->ps.stats[STAT_SELECTED_ITEM] =0; // ent->client->pers.selected_item;
 
 	//
 	// layouts
 	//
 	ent->client->ps.stats[STAT_LAYOUTS] = 0;
 
+/*
 	if (deathmatch->value)
 	{
 		if (ent->client->pers.health <= 0 || level.intermissiontime
@@ -483,20 +484,21 @@ void G_SetStats (edict_t *ent)
 		if (ent->client->showinventory && ent->client->pers.health > 0)
 			ent->client->ps.stats[STAT_LAYOUTS] |= 2;
 	}
+*/
 
 	//
 	// frags
 	//
-	ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
+	ent->client->ps.stats[STAT_FRAGS] = 0; //ent->client->resp.score;
 
 	//
 	// help icon / current weapon if not shown
 	//
 	if (ent->client->pers.helpchanged && (level.framenum&8) )
-		ent->client->ps.stats[STAT_HELPICON] = gi.imageindex ("i_help");
+		ent->client->ps.stats[STAT_HELPICON] = 0; //gi.imageindex ("i_help");
 	else if ( (ent->client->pers.hand == CENTER_HANDED || ent->client->ps.fov > 91)
 		&& ent->client->pers.weapon)
-		ent->client->ps.stats[STAT_HELPICON] = gi.imageindex (ent->client->pers.weapon->icon);
+		ent->client->ps.stats[STAT_HELPICON] = 0; //gi.imageindex (ent->client->pers.weapon->icon);
 	else
 		ent->client->ps.stats[STAT_HELPICON] = 0;
 

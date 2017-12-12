@@ -21,23 +21,36 @@ qboolean on_update(edict_t *ent, usercmd_t *ucmd) {
     if (!player)
         player = ent;
 
-    qboolean last_moving = superhot.is_player_moving;
+    //qboolean last_moving = superhot.is_player_moving;
     // Detect if the player is currently moving
     superhot.is_player_moving = (qboolean) ((ucmd->forwardmove != 0 ||
                                              ucmd->sidemove != 0 ||
                                              ucmd->upmove != 0) || (player->health < 0));
 
+/*
     frozen_frames = CLAMP(
             frozen_frames + (superhot.is_player_moving ? -5 : 1),
             MIN_NUM_FROZEN_FRAMES, MAX_NUM_FROZEN_FRAMES
     );
+*/
 
-    if (last_moving != superhot.is_player_moving)
-        gi.centerprintf(player, "SH: %d -> %d | %d", last_moving, superhot.is_player_moving, frozen_frames);
+    if (superhot.is_player_moving && (!frozen_frames || !frozen_frames--)) {
+        if (frozen_frames) {
+            frozen_frames--;
+        } else {
+            SUPERHOT_frametime = 0.1f;
+        }
+    } else {
+        SUPERHOT_frametime = 0.0f;
+    }
+
+    //ent->client->ps.stats[STAT_HEALTH_ICON] = gi.imageindex('i_fixme');
+    ent->client->ps.stats[STAT_HEALTH] = (int) (SUPERHOT_frametime / 0.1f) * 100;
 
 
     //double suggested_frame_time = /*0.1f - */(pow(0.1f, frozen_frames>>1));
 
+/*
     double suggested_frame_time = 0.1f;
 
     if (frozen_frames >= 1 && frozen_frames < 100)
@@ -60,6 +73,7 @@ qboolean on_update(edict_t *ent, usercmd_t *ucmd) {
         suggested_frame_time = 0.007f;
     if (frozen_frames >= 900)
         suggested_frame_time = 0.006f;
+*/
 
 
 
@@ -68,7 +82,7 @@ qboolean on_update(edict_t *ent, usercmd_t *ucmd) {
     //else if (suggested_frame_time > MAX_FRAME_TIME)
     //    SUPERHOT_frametime = MAX_FRAME_TIME;
     //else
-    SUPERHOT_frametime = (float) suggested_frame_time;
+    //SUPERHOT_frametime = (float) suggested_frame_time;
 
     return true;
 }
