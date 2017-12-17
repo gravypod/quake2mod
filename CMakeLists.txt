@@ -73,7 +73,7 @@ SET(QUAKE_2_SRC
 add_library(quake2 SHARED ${QUAKE_2_SRC})
 
 set_target_properties(quake2 PROPERTIES
-		PREFIX "${CMAKE_SOURCE_DIR}/engine/baseq2/"
+		PREFIX "${CMAKE_SOURCE_DIR}/engine/jk369/"
 		OUTPUT_NAME "gamex86"
 		SUFFIX ".dll"
 		LINK_FLAGS "-fPIC -shared"
