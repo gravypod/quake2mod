@@ -4,7 +4,8 @@
 #include "q2includewrapper.h"
 
 typedef enum {
-    FROZEN_TIME_BOOST
+    FROZEN_TIME_BOOST,
+    FROZEN_TIME_BOOST_GUNSHOT
 } superhot_pickup_t;
 
 
@@ -16,7 +17,7 @@ typedef struct {
 
     void (*on_pickup)(superhot_pickup_t type, edict_t *ent);
 } mod;
-
+typedef void (firefunc_t)(edict_t*);
 extern edict_t *player;
 
 extern mod superhot;

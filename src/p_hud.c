@@ -1,7 +1,6 @@
 #include "g_local.h"
 
 
-
 /*
 ======================================================================
 
@@ -467,6 +466,8 @@ void G_SetStats (edict_t *ent)
 	// layouts
 	//
 	ent->client->ps.stats[STAT_LAYOUTS] = 0;
+
+	ent->client->ps.stats[STAT_SPECTATOR] = 1;
 
 /*
 	if (deathmatch->value)

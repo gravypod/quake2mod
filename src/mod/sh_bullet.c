@@ -1,8 +1,11 @@
 #include "sh_bullet.h"
+#include "mod.h"
 
 #define SUPERHOT_BULLET_THINK_INTERVAL ((float)0.01)
 #define SUPERHOT_BULLET_SPEED 500 // 650
 #define SUPERHOT_BULLET_DAMAGE 999999
+
+int frozen_frames;
 
 /**
  * Trigger's an entity's dodge logic if it exists
@@ -81,6 +84,10 @@ void superhot_bullet_touch(edict_t *ent, edict_t *other, cplane_t *plane, csurfa
     gi.WritePosition (origin);
     gi.multicast (ent->s.origin, MULTICAST_PHS);
 
+    if (ent->is_special_bullet) {
+        superhot.on_pickup(FROZEN_TIME_BOOST_GUNSHOT, NULL);
+    }
+
     G_FreeEdict (ent);
 }
 
@@ -101,7 +108,7 @@ void superhot_bullet_touch(edict_t *ent, edict_t *other, cplane_t *plane, csurfa
     self->nextthink = level.time + SUPERHOT_BULLET_THINK_INTERVAL;
 }*/
 
-void fire_superhot_bullet(edict_t *self, vec3_t start, vec3_t dir) {
+edict_t *fire_superhot_bullet(edict_t *self, vec3_t start, vec3_t dir) {
     edict_t *rocket = G_Spawn();
 
     VectorCopy (start, rocket->s.origin);
@@ -142,4 +149,5 @@ void fire_superhot_bullet(edict_t *self, vec3_t start, vec3_t dir) {
     }
 
     gi.linkentity(rocket);
+    return rocket;
 }

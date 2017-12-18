@@ -7,8 +7,12 @@ void		Drop_Weapon (edict_t *ent, gitem_t *inv);
 
 void Weapon_Grenade (edict_t *ent);
 
+
+
 // JDK Superhot Weapons
-void Superhot_Weapon_Fire (edict_t *ent);
+edict_t *Superhot_Weapon_Fire (edict_t *ent);
+void Superhot_Weapon_Special_Fire(edict_t *ent);
+void Superhot_Weapon_Fire2(edict_t *ent);
 void Superhot_Weapon_Blaster (edict_t *ent);
 void Superhot_Weapon_Shotgun (edict_t *ent);
 void Superhot_Weapon_SuperShotgun (edict_t *ent);
